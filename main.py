@@ -46,6 +46,7 @@ def saveResToDb(resRequests):
                     db.saveTo("wx_ald_app_data", insert, findone[0])
                 else:
                     db.saveTo("wx_ald_app_data", insert)
+        db.closeCon()
 
 
 if __name__ == '__main__':

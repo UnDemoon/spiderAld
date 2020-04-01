@@ -54,6 +54,7 @@ class MyDb(object):
             res = cur.fetchall()
         else:
             res = cur.fetchone()
+        cur.close()
         return res
 
     def saveTo(self, table, data, update_id = None):
@@ -75,9 +76,9 @@ class MyDb(object):
         except Exception as e:
             #logFile(str(e))
             logFile(sql)
+        cur.close()
 
     def closeCon(self):
-        cur.close()
         self.db.close()
 
     #   错误信息
