@@ -13,12 +13,17 @@ def md5Code(len=32):
     code = m.hexdigest()
     return code[:len]
 
+#   当前路径
+def curPath():
+    path = os.path.abspath(os.path.dirname(__file__))
+    return path
+
 #   图片下载方法
-def downloadImgByUrl(imgurl, savepath = "./temp/", name=None):
+def downloadImgByUrl(imgurl, savepath = "/temp/", name=None):
     r = requests.get(imgurl,stream=True)
     if not name:
         name = md5Code() + ".jpg"
-    filepath = savepath + name
+    filepath = curPath() + savepath + name
     with open(filepath, 'wb') as fd:
         for chunk in r.iter_content():
             fd.write(chunk)

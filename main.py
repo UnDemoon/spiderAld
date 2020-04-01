@@ -6,6 +6,8 @@ import sys
 from SpiderAld import SpiderAld
 from MyDb import MyDb
 
+#   工具集合
+from utils import *
 #   数据过滤
 def dataFiler(d):
     d = d.strip("-")
@@ -18,7 +20,8 @@ def dataFiler(d):
 
 #数据保存到数据库
 def saveResToDb(resRequests):
-    with open("./dbconfig.json", encoding='utf-8') as f:
+    configfile = curPath() + "/dbconfig.json"
+    with open(configfile, encoding='utf-8') as f:
         config = json.load(f)
         db = MyDb(config)
         data = resRequests["data"]
