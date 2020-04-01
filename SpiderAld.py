@@ -2,7 +2,7 @@
 import requests
 #   工具方法集合
 from utils import *
-from ImgOrc import ImgOrc
+# from ImgOrc import ImgOrc
 #   自定义模块
 from MyDb import MyDb
 #   忽略警告
