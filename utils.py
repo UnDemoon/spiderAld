@@ -1,6 +1,7 @@
 #   工具方法集合
 import hashlib
 import time
+import datetime
 import requests
 import os
 from aippythonsdk.aip import AipOcr
@@ -52,3 +53,9 @@ def imgOrcByBaidu(imgpath):
     str = res['words_result'][0]['words']
     str = "".join(filter(lambda s:s.isalnum(), list(str)))
     return str
+
+    #   错误信息
+def logFile(type, msg):
+    with open('ErrorLog.log', 'a') as f:
+        time = datetime.datetime.now()
+        f.write("%s:%s-%s\n" % (type, msg, time) )

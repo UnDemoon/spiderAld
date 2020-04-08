@@ -6,7 +6,8 @@ import warnings
 import os
 import sys
 import json
-
+#   工具集合
+from utils import *
 #   mysql相关
 import pymysql
 
@@ -35,7 +36,7 @@ class MyDb(object):
         except Exception as e:
             #   最大重连次数
             if self.timer_connet >= 5:
-                logFile("连接数据库失败")
+                logFile("DBConnect","连接数据库失败")
                 sys.exit()
             else:
                 #   尝试重连
@@ -74,14 +75,8 @@ class MyDb(object):
             cur.execute(sql)
             self.db.commit()
         except Exception as e:
-            #logFile(str(e))
-            logFile(sql)
+            logFile("DBSave",sql)
         cur.close()
 
     def closeCon(self):
         self.db.close()
-
-    #   错误信息
-def logFile( msg):
-    with open('dblog.log', 'a') as f:
-        f.write(str(int(time.time())) +":"+ msg + "\n")

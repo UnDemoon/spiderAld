@@ -8,6 +8,8 @@ from MyDb import MyDb
 
 #   工具集合
 from utils import *
+
+db = None
 #   数据过滤
 def dataFiler(d):
     d = d.strip("-")
@@ -17,13 +19,17 @@ def dataFiler(d):
         d = "NULL"
     return d
 
-
-#数据保存到数据库
-def saveResToDb(resRequests):
+#   连接数据库
+def dbConnect():
     configfile = curPath() + "/dbconfig.json"
     with open(configfile, encoding='utf-8') as f:
         config = json.load(f)
+        global db
         db = MyDb(config)
+
+#数据保存到数据库
+def saveResToDb(resRequests):
+        global db
         data = resRequests["data"]
         insert = {}
         for item in data:
@@ -49,11 +55,24 @@ def saveResToDb(resRequests):
                     db.saveTo("wx_ald_app_data", insert, findone[0])
                 else:
                     db.saveTo("wx_ald_app_data", insert)
-        db.closeCon()
 
+#       读取阿拉丁账号
+def loadAccFromDb():
+    global db
+    where_str = "item_name='%s' AND is_deleted='%s' " % ('aldAccount', '0')
+    orderby = ""
+    accounts = db.findFrom("global_config", where_str, orderby, True)
+    return list(map(lambda item:( item[2].split(';')[0], item[2].split(';')[1] ), accounts))    #   过滤无效数据并切割字符串打包
 
 if __name__ == '__main__':
-    aldacount, aldpwd = sys.argv[1], sys.argv[2]
-    spider = SpiderAld( (aldacount, aldpwd) )
-    res =spider.getData()
-    saveResToDb(res)
+    dbConnect() #   连接数据库 db用作全局变量
+    if db:
+        accs = loadAccFromDb()
+        for item in accs:
+            print(item)
+        # for (acc, pwd) in variable:
+            # spider = SpiderAld( (aldacount, aldpwd) )
+            spider = SpiderAld(item)
+            res =spider.getData()
+            saveResToDb(res)
+        db.closeCon()

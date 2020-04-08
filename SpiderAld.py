@@ -37,10 +37,13 @@ class SpiderAld(object):
                     "password" : config[1]
                 }
         self.secretKey = None
+        self.maxTry = 5
         self.run()
     #   主运行程序
     def run(self):
-        while not self.token:
+        temp = self.maxTry
+        while not self.token and temp > 0:
+            temp -= 1
             sk, code = self.getCode()
             self.getToken(sk, code)
 
@@ -51,7 +54,7 @@ class SpiderAld(object):
         formData = {
                     "secretKey" : secretKey
                     }
-        for i in range(0, 5):
+        for i in range(0, self.maxTry):
             res_requests = requests.post(self.interface["getcode"], formData, headers=self.headers, verify=False)
             res = res_requests.json()
             if res["code"] == 200:
@@ -76,6 +79,8 @@ class SpiderAld(object):
         res  = res_requests.json()
         if res["code"] == 200:
             self.token = res["data"]["token"]
+        else:
+            logFile("requests", res)
 
     #      获取数据
     def getData(self):
