@@ -60,7 +60,8 @@ class SpiderAld(object):
             if res["code"] == 200:
                 imgpath = downloadImgByUrl("https://betaapi.aldwx.com" + res["url"])
                 code = imgOrcByBaidu(imgpath)
-                self.getToken(secretKey, code)
+                if code:
+                    self.getToken(secretKey, code)
                 delFile(imgpath)
                 break
             else:

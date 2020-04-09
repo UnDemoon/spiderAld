@@ -50,8 +50,11 @@ def imgOrcByBaidu(imgpath):
     client = AipOcr(APP_ID, API_KEY, SECRET_KEY)
     image = get_file_content(imgpath)
     res = client.basicAccurate(image)
-    str = res['words_result'][0]['words']
-    str = "".join(filter(lambda s:s.isalnum(), list(str)))
+    if int(res["words_result_num"]) > 0:
+        str = res['words_result'][0]['words']
+        str = "".join(filter(lambda s:s.isalnum(), list(str)))
+    else:
+        str = None
     return str
 
     #   错误信息
