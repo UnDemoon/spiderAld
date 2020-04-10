@@ -41,9 +41,8 @@ class SpiderAld(object):
         self.run()
     #   主运行程序
     def run(self):
-        temp = self.maxTry
-        while not self.token and temp > 0:
-            temp -= 1
+        while not self.token and self.maxTry > 0:
+            self.maxTry -= 1
             sk, code = self.getCode()
             self.getToken(sk, code)
 
@@ -54,14 +53,12 @@ class SpiderAld(object):
         formData = {
                     "secretKey" : secretKey
                     }
-        for i in range(0, self.maxTry):
+        for i in range(0, 5):
             res_requests = requests.post(self.interface["getcode"], formData, headers=self.headers, verify=False)
             res = res_requests.json()
             if res["code"] == 200:
                 imgpath = downloadImgByUrl("https://betaapi.aldwx.com" + res["url"])
                 code = imgOrcByBaidu(imgpath)
-                if code:
-                    self.getToken(secretKey, code)
                 delFile(imgpath)
                 break
             else:
@@ -81,7 +78,9 @@ class SpiderAld(object):
         if res["code"] == 200:
             self.token = res["data"]["token"]
         else:
-            logFile("requests", res)
+            logFile("requests", res, formData)
+            if res["code"] == 202:
+                self.maxTry -= 3     #   202错误说明是账号或密码错误，再试一次跳过
 
     #      获取数据
     def getData(self):

@@ -69,7 +69,6 @@ if __name__ == '__main__':
     if db:
         accs = loadAccFromDb()
         for item in accs:
-            print(item)
         # for (acc, pwd) in variable:
             # spider = SpiderAld( (aldacount, aldpwd) )
             spider = SpiderAld(item)

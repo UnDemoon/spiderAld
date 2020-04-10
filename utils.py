@@ -58,7 +58,10 @@ def imgOrcByBaidu(imgpath):
     return str
 
     #   错误信息
-def logFile(type, msg):
+def logFile(type, *msgs):
+    strs = ""
+    for msg in msgs:
+        strs += " || " + str(msg)
     with open('ErrorLog.log', 'a') as f:
         time = datetime.datetime.now()
-        f.write("%s:%s-%s\n" % (type, msg, time) )
+        f.write("%s : %s --%s\n" % (type, strs, time) )
